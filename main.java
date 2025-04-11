@@ -1,103 +1,89 @@
-// Importações necessárias (ex: Scanner)
+// Aividade Prática feita em Grupo
+// Alunos: Bernardo Antunes Heckler; Gilmar Biolch; Gustavo Francisco;
+// RA's: 1137118; 1137267; 1137279.
 
-// Inicializa o scanner para entrada do usuário
-// Lista para armazenar os carros (usando uma classe Carro ou arrays)
-// Variável de controle do loop principal
-// Loop principal (do-while ou while)
-// Exibe o menu de opções
-// Lê a opção do usuário
-// Switch para tratar cada opção
-// CADA CASE CORRESPONDE A UMA PARTE DO PROGRAMA
-
-// 2. CADASTRAR CARROS
-// Limpa o buffer do scanner (se necessário)
-// Pede os dados do carro ao usuário
-// Validações básicas (if-else)
-// Calcula o gasto total (opcional: pode pedir o preço por litro)
-// Cria o objeto Carro e adiciona à lista
-
-// 3. EXIBIR TODOS OS CARROS
-// Verifica se há carros cadastrados (if-else)
-// Cabeçalho da tabela
-// Percorre a lista com for-each
-
-// 4. MOSTRAR CARRO QUE MAIS GASTOU
-// Inicializa variáveis para comparação
-// Percorre a lista com for-i
-// Exibe o resultado
-
-// 5. MOSTRAR TOTAL GASTO
-// Soma os gastos com for-each
-
-// 6. SAIR
-// Exibe mensagem de saída
-
-// LEMBRETES: 
-// Evitar valores negativos ou zerados
-
-// return para sair do método se houver erro
-
-// 2. MÉTODOS
-// - Cadastrar: valida dados, adiciona à lista
-// - Exibir: verifica lista vazia, imprime tabela
-// - Maior gasto: compara valores com for-i
-// - Total: soma com for-each
-
-// 3. CLASSE Carro
-// Modelo, placa, km, litros, gastoTotal + getters
-
+// importei o Scanner e ArrayList( é uma lista dinâmica que permite armazenar vários valores
+// e redimensionar automaticamente conforme adicionamos ou removemos itens.)
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class main {
     public static final String CLEAR_CONSOLE = "\033[H\033[2J";
-    private static Scanner lerTeclado = new Scanner(System.in);
-    private static java.util.ArrayList<Carro> carros = new java.util.ArrayList<>();
-    private static final double litroDoPosto = 6.29; // Updated price per liter
 
+    // private previne que dentro dessa classe aja modificaçãoes externas.
+    private static Scanner lerTeclado = new Scanner(System.in); // classe Scanner para ler entrada de dados
+    private static java.util.ArrayList<Veiculo> veiculos = new java.util.ArrayList<>();
+    private static final double litroDoPosto = 6.29; // AQUI O PREÇO FIXO DO LITRO DO POSTO
+    // 'final' indica que este valor é uma CONSTANTE e não pode ser alterado
+
+    // Limpar a tela
     public static void clearScreen() {
         System.out.print(CLEAR_CONSOLE);
         System.out.flush();
     }
 
+    // deixei o texto do menu em uma String, para facilitar a visualização e na sua
+    // chamada.
     public static void exibirMenu() {
-        String menu = "----------------------------\n" + "1 - Cadastrar Carros\n" + "2 - Exibir carros cadastrados\n" + //
-                "3 - Mostrar carro que mais gastou\n" + "4 - Mostrar gasto total\n" + "0 - Sair\r\n" + //
+        String menu = "----------------------------\n" +
+                "1 - Cadastrar Veiculos\n" +
+                "2 - Exibir todos os veiculos cadastrados e seus respectivos gastos\n" +
+                "3 - Mostrar veiculo que mais gastou\n" +
+                "4 - Mostrar gasto total gasto em combustíivel\n" +
+                "0 - Sair do programa\r\n" +
                 "----------------------------\n";
         System.out.print(menu);
     }
 
-    /////// dados que ira armazenar os carros cadastrados.
-    static class Carro {
-        String modeloCarro;
+    // Dados que ira armazenar os veiculos cadastrados.
+    static class Veiculo {
+        String nomeCarros;
         double dinheiroCliente;
-        double valorLitro;
+        double valoresCombustivel;
 
-        public Carro(String modeloCarro, double dinheiroCliente, double valorLitro) {
-            this.modeloCarro = modeloCarro;
+        public Veiculo(String nomeCarros, double dinheiroCliente, double valoresCombustivel) {
+            // criando o veiculo com nomes, dinheiro e tanque.
+            this.nomeCarros = nomeCarros;
             this.dinheiroCliente = dinheiroCliente;
-            this.valorLitro = valorLitro;
+            this.valoresCombustivel = valoresCombustivel;
         }
 
-        /////// opcao 1: cadastrar carros
-        public static void cadastrarCarros() {
+        /////// opcao 1: cadastrar veiculos
+        public static void cadastrarVeiculos() {
             clearScreen();
-            System.out.println("Opção 1 - Cadastrando Carros:");
-            System.out.println("----- CADASTRO DE CARROS (Máx: 5) -----");
+            System.out.println("Opção 1 - Cadastrando Veiculos:");
+            System.out.println("----- CADASTRO DE VEICULOS (Máx: 5) -----");
+
+            // for i que percorre 5 vezes, para cadastrar até 5 veiculos.
             for (int i = 0; i < 5; i++) {
-                System.out.println("\nCarro #" + (i + 1));
+                System.out.println("\nVeiculo #" + (i + 1));
 
                 System.out.print("Modelo: ");
-                String modeloCarro = lerTeclado.nextLine();
+                String nomeCarros = lerTeclado.nextLine();
 
-                System.out.print("Dinheiro disponível: R$ ");
-                double dinheiroCliente = lerTeclado.nextDouble();
+                // VALIDAÇÃO DO VALOR POSITIVO previnindo valor negativo
+                double dinheiroCliente;
+
+                // do-while esperando por valor válido
+                do {
+                    System.out.print("Dinheiro disponível (valor positivo): R$ ");
+                    dinheiroCliente = lerTeclado.nextDouble();
+                    if (dinheiroCliente <= 0) {
+                        System.out.println("Valor inválido! Digite um valor positivo.");
+                    }
+                } while (dinheiroCliente <= 0);
+
                 lerTeclado.nextLine();
-                carros.add(new Carro(modeloCarro, dinheiroCliente, litroDoPosto)); // Using the constant litroDoPosto
+
+                // Adiciona um novo objeto Veiculo à ArrayList 'veiculos'
+                veiculos.add(new Veiculo(nomeCarros, dinheiroCliente, litroDoPosto));
+
+                // Pergunta se quer continuar após os 4 primeiros veiculos (0 a 3)
                 if (i < 4) {
-                    System.out.print("\nCadastrar outro Carro? (S/N): ");
+                    System.out.print("\nCadastrar outro Veiculo? (S/N): ");
                     String continuar = lerTeclado.nextLine();
-                    if (!continuar.equalsIgnoreCase("S")) {
+                    if (!continuar.equalsIgnoreCase("S")) { // equalsIgnoreCase ignora se o usuario digitar em maiusculo
+                                                            // ou minusculo
                         break;
                     }
                 }
@@ -105,111 +91,108 @@ public class main {
             System.out.println("\nCadastro concluído!");
         }
 
-        /////// opção 2: exibir carros cadastrados
-
-        public static void exibirCarros() {
+        /////// opção 2: exibir veiculos cadastrados
+        public static void exibirVeiculos() {
             clearScreen();
-            System.out.println("Opção 2 - Exibir carros cadastrados:");
-            if (carros.isEmpty()) {
-                System.out.println("\nNenhum carro cadastrado.");
+            System.out.println("Opção 2 - Exibir veiculos cadastrados:");
+            if (veiculos.isEmpty()) { // // veiculos.isEmpty() verifica se a ArrayList 'veiculos' está vazia
+                System.out.println("\nNenhum veiculo cadastrado.");
             } else {
-                System.out.println("----- CARROS CADASTRADOS -----");
+                System.out.println("----- VEICULOS CADASTRADOS -----");
                 System.out.println("Modelo\t\t\tDinheiro\t\tLitros");
-                for (Carro carro : carros) {
-                    double litros = carro.dinheiroCliente / carro.valorLitro;
+                for (Veiculo veiculo : veiculos) {
+                    double litros = veiculo.dinheiroCliente / veiculo.valoresCombustivel;
                     System.out.printf("%-15s\t\tR$ %-10.2f\t\t%.2f L%n",
-                            carro.modeloCarro,
-                            carro.dinheiroCliente,
+                            veiculo.nomeCarros,
+                            veiculo.dinheiroCliente,
                             litros);
                 }
                 System.out.println("---------------------------------");
             }
         }
 
-        /////// opção 3: mostrar carro que mais gastou
-
-        public static void mostrarCarroMaisGastou() {
+        /////// opção 3: mostrar veiculo que mais gastou
+        public static void mostrarVeiculoMaisGastou() {
             clearScreen();
-            System.out.println("Opção 3 - Mostrar carro que mais gastou:");
-            if (carros.isEmpty()) {
-                System.out.println("\nNenhum carro foi cadastrado ainda!");
+            System.out.println("Opção 3 - Mostrar veiculo que mais gastou:");
+            if (veiculos.isEmpty()) { // // veiculos.isEmpty() verifica se a ArrayList 'veiculos' está vazia
+                System.out.println("\nNenhum veiculo foi cadastrado ainda!");
             } else {
-                Carro carroMaisGastou = carros.get(0);
-                for (Carro carro : carros) {
-                    if (carro.dinheiroCliente > carroMaisGastou.dinheiroCliente) {
-                        carroMaisGastou = carro;
+                Veiculo veiculoMaisGastou = veiculos.get(0);
+                for (Veiculo veiculo : veiculos) {
+                    if (veiculo.dinheiroCliente > veiculoMaisGastou.dinheiroCliente) {
+                        veiculoMaisGastou = veiculo;
                     }
                 }
 
-                System.out.printf("Carro que mais gastou: %s - R$ %.2f (%.2f litros)%n",
-                        carroMaisGastou.modeloCarro,
-                        carroMaisGastou.dinheiroCliente,
-                        carroMaisGastou.dinheiroCliente / litroDoPosto);
+                System.out.printf("Veiculo que mais gastou: %s - R$ %.2f (%.2f litros)%n",
+                        veiculoMaisGastou.nomeCarros,
+                        veiculoMaisGastou.dinheiroCliente,
+                        veiculoMaisGastou.dinheiroCliente / litroDoPosto);
             }
         }
 
         /////// opção 4: mostrar total gasto em combustível
-
         public static void totalGastoCombustivel() {
             clearScreen();
             System.out.println("Opção 4 - Mostrar gasto total em combustível:\n");
-            if (carros.isEmpty()) {
-                System.out.println("\nNenhum carro foi cadastrado ainda!");
+            if (veiculos.isEmpty()) { // // veiculos.isEmpty() verifica se a ArrayList 'veiculos' está vazia
+                System.out.println("\nNenhum veiculo foi cadastrado ainda!");
             } else {
                 double litrosTotais = 0;
                 double dinheiroTotal = 0;
-                for (Carro carro : carros) {
-                    litrosTotais += carro.dinheiroCliente / carro.valorLitro;
-                    dinheiroTotal += carro.dinheiroCliente;
+                for (Veiculo veiculo : veiculos) { // Para cada veículo na lista calcular abaixo.
+                    litrosTotais += veiculo.dinheiroCliente / veiculo.valoresCombustivel;
+                    dinheiroTotal += veiculo.dinheiroCliente;
                 }
                 System.out.printf("Total de litros abastecidos: %.2f L%n", litrosTotais);
                 System.out.printf("Dinheiro total gasto: R$ %.2f%n", dinheiroTotal);
-
             }
         }
 
-        /////// aqui do-While fara o menu e opções serem carregadas através das funções
-        /////// criadas acima.
-        /// assim que o usuario selecionar via switch, qual case ele escolher.
+        // main = menu principal
         public static void main(String[] args) {
             int opcao;
+
+            // Loop do-while para manter o programa rodando até o usuário escolher sair
+            // (opção 0)
             do {
                 clearScreen();
-                exibirMenu();
+                exibirMenu(); // Mostra o menu de opções
                 System.out.print("Escolha uma opção: ");
-                opcao = lerTeclado.nextInt();
-                lerTeclado.nextLine();
+                opcao = lerTeclado.nextInt(); // Lê a opção do usuário
+                lerTeclado.nextLine(); // Consome a quebra de linha deixada pelo nextInt()
 
+                // Estrutura switch para executar a ação correspondente à opção escolhida
                 switch (opcao) {
                     case 1:
-                        cadastrarCarros();
+                        cadastrarVeiculos(); // Chama o método para cadastrar veículos
                         break;
                     case 2:
-                        exibirCarros();
+                        exibirVeiculos(); // Chama o método para listar veículos cadastrados
                         break;
                     case 3:
-                        mostrarCarroMaisGastou();
+                        mostrarVeiculoMaisGastou(); // Chama o método para mostrar veículo com maior gasto
                         break;
                     case 4:
-                        totalGastoCombustivel();
+                        totalGastoCombustivel(); // Chama o método para calcular gasto total
                         break;
                     case 0:
                         clearScreen();
-                        System.out.println("Saindo...");
+                        System.out.println("Saindo..."); // Mensagem de saída do programa
                         break;
                     default:
                         clearScreen();
-                        System.out.println("Opção Inválida!");
+                        System.out.println("Opção Inválida!"); // Trata opções não existentes
                         break;
                 }
 
+                // Se a opção não for 0 (sair), pausa antes de mostrar o menu novamente
                 if (opcao != 0) {
                     System.out.println("\nPressione Enter para continuar...");
                     lerTeclado.nextLine();
                 }
-            } while (opcao != 0);
-
-            lerTeclado.close();
+            } while (opcao != 0); // Condição de saída: quando opcao for 0
         }
     }
 }
