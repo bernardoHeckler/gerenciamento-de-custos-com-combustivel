@@ -47,77 +47,124 @@
 // Modelo, placa, km, litros, gastoTotal + getters
 
 import java.util.Scanner;
+import java.util.ArrayList;
+
 public class main {
     public static final String CLEAR_CONSOLE = "\033[H\033[2J";
     private static Scanner lerTeclado = new Scanner(System.in);
+    private static java.util.ArrayList<Carro> carros = new java.util.ArrayList<>();
+    private static final double litroDoPosto = 6.29; // Updated price per liter
 
-    // Método para limpar o console
     public static void clearScreen() {
         System.out.print(CLEAR_CONSOLE);
         System.out.flush();
     }
 
     public static void exibirMenu() {
-        String menu = """
-                \n
-                        Gerenciamento de Custos com Combustível
-                \n
-                        1 - Cadastrar Carros
-                        2 - Exibir todos os carros Cadastrados e seus respectivos gastos
-                        3 - Mostrar o Carro que mais Gastou
-                        4 - Mostrar total gasto em Combustível
-                        0 - Sair
-                        """;
-        System.out.println(menu);
+        String menu = "----------------------------\n" + "1 - Cadastrar Carros\n" + "2 - Exibir carros cadastrados\n" + //
+                "3 - Mostrar carro que mais gastou\n" + "4 - Mostrar gasto total\n" + "0 - Sair\r\n" + //
+                "----------------------------\n";
+        System.out.print(menu);
     }
 
-    public static void main(String[] args) {
-        int opcao;
-        
-        do {
+    static class Carro {
+        String modeloCarro;
+        double dinheiroCliente;
+        double valorLitro;
+
+        public Carro(String modeloCarro, double dinheiroCliente, double valorLitro) {
+            this.modeloCarro = modeloCarro;
+            this.dinheiroCliente = dinheiroCliente;
+            this.valorLitro = valorLitro;
+        }
+
+        public static void cadastrarCarros() {
             clearScreen();
-            exibirMenu();
-            System.out.print("Escolha uma opção: ");
-            opcao = lerTeclado.nextInt();
-            lerTeclado.nextLine(); // Limpar o buffer
-            
-            switch (opcao) {
-                case 1:
-                    clearScreen();
-                    System.out.println("Opção 1 - Cadastrar Carros");
-                    // Implementar cadastro de carros
-                    break;
-                case 2:
-                    clearScreen();
-                    System.out.println("Opção 2 - Exibir carros cadastrados");
-                    // Implementar exibição de carros
-                    break;
-                case 3:
-                    clearScreen();
-                    System.out.println("Opção 3 - Carro que mais gastou");
-                    // Implementar lógica para encontrar carro que mais gastou
-                    break;
-                case 4:
-                    clearScreen();
-                    System.out.println("Opção 4 - Total gasto em combustível");
-                    // Implementar cálculo do total gasto
-                    break;
-                case 0:
-                    clearScreen();
-                    System.out.println("Saindo...");
-                    break;
-                default:
-                    clearScreen();
-                    System.out.println("Opção Inválida!");
-                    break;
-            }
-            
-            if (opcao != 0) {
-                System.out.println("\nPressione Enter para continuar...");
+            System.out.println("Opção 1 - Cadastrando Carros:");
+            System.out.println("----- CADASTRO DE CARROS (Máx: 5) -----");
+            for (int i = 0; i < 5; i++) {
+                System.out.println("\nCarro #" + (i + 1));
+
+                System.out.print("Modelo: ");
+                String modeloCarro = lerTeclado.nextLine();
+
+                System.out.print("Dinheiro disponível: R$ ");
+                double dinheiroCliente = lerTeclado.nextDouble();
                 lerTeclado.nextLine();
+                carros.add(new Carro(modeloCarro, dinheiroCliente, litroDoPosto)); // Using the constant litroDoPosto
+                if (i < 4) {
+                    System.out.print("\nCadastrar outro Carro? (S/N): ");
+                    String continuar = lerTeclado.nextLine();
+                    if (!continuar.equalsIgnoreCase("S")) {
+                        break;
+                    }
+                }
             }
-        } while (opcao != 0);
-        
-        lerTeclado.close();
+            System.out.println("\nCadastro concluído!");
+        }
+
+        public static void exibirCarros() {
+            clearScreen();
+            System.out.println("Opção 2 - Exibir carros cadastrados:");
+            if (carros.isEmpty()) {
+                System.out.println("\nNenhum carro cadastrado.");
+            } else {
+                System.out.println("----- CARROS CADASTRADOS -----");
+                System.out.println("Modelo\t\t\tDinheiro\t\tLitros");
+                for (Carro carro : carros) {
+                    double litros = carro.dinheiroCliente / carro.valorLitro;
+                    System.out.printf("%-15s\t\tR$ %-10.2f\t\t%.2f L%n",
+                            carro.modeloCarro,
+                            carro.dinheiroCliente,
+                            litros);
+                }
+                System.out.println("---------------------------------");
+            }
+        }
+
+        public static void main(String[] args) {
+            int opcao;
+            do {
+                clearScreen();
+                exibirMenu();
+                System.out.print("Escolha uma opção: ");
+                opcao = lerTeclado.nextInt();
+                lerTeclado.nextLine();
+
+                switch (opcao) {
+                    case 1:
+                        cadastrarCarros();
+                        break;
+                    case 2:
+                        exibirCarros();
+                        break;
+                    case 3:
+                        clearScreen();
+                        System.out.println("Opção 3 - Carro que mais gastou");
+                        // Implementar lógica para encontrar carro que mais gastou
+                        break;
+                    case 4:
+                        clearScreen();
+                        System.out.println("Opção 4 - Total gasto em combustível");
+                        // Implementar cálculo do total gasto
+                        break;
+                    case 0:
+                        clearScreen();
+                        System.out.println("Saindo...");
+                        break;
+                    default:
+                        clearScreen();
+                        System.out.println("Opção Inválida!");
+                        break;
+                }
+
+                if (opcao != 0) {
+                    System.out.println("\nPressione Enter para continuar...");
+                    lerTeclado.nextLine();
+                }
+            } while (opcao != 0);
+
+            lerTeclado.close();
+        }
     }
 }
