@@ -67,6 +67,7 @@ public class main {
         System.out.print(menu);
     }
 
+    /////// dados que ira armazenar os carros cadastrados.
     static class Carro {
         String modeloCarro;
         double dinheiroCliente;
@@ -78,6 +79,7 @@ public class main {
             this.valorLitro = valorLitro;
         }
 
+        /////// opcao 1: cadastrar carros
         public static void cadastrarCarros() {
             clearScreen();
             System.out.println("Opção 1 - Cadastrando Carros:");
@@ -103,6 +105,8 @@ public class main {
             System.out.println("\nCadastro concluído!");
         }
 
+        /////// opção 2: exibir carros cadastrados
+
         public static void exibirCarros() {
             clearScreen();
             System.out.println("Opção 2 - Exibir carros cadastrados:");
@@ -122,6 +126,31 @@ public class main {
             }
         }
 
+        /////// opção 3: mostrar carro que mais gastou
+        
+        public static void mostrarCarroMaisGastou() {
+            clearScreen();
+            System.out.println("Opção 3 - Mostrar carro que mais gastou:");
+            if (carros.isEmpty()) {
+                System.out.println("\nNenhum carro foi cadastrado ainda!");
+            } else {
+                Carro carroMaisGastou = carros.get(0);
+                for (Carro carro : carros) {
+                    if (carro.dinheiroCliente > carroMaisGastou.dinheiroCliente) {
+                        carroMaisGastou = carro;
+                    }
+                }
+
+                System.out.printf("Carro que mais gastou: %s - R$ %.2f (%.2f litros)%n",
+                        carroMaisGastou.modeloCarro,
+                        carroMaisGastou.dinheiroCliente,
+                        carroMaisGastou.dinheiroCliente / litroDoPosto);
+            }
+        }
+
+        /////// aqui do-While fara o menu e opções serem carregadas através das funções
+        /////// criadas acima.
+        /// assim que o usuario selecionar via switch, qual case ele escolher.
         public static void main(String[] args) {
             int opcao;
             do {
@@ -139,9 +168,7 @@ public class main {
                         exibirCarros();
                         break;
                     case 3:
-                        clearScreen();
-                        System.out.println("Opção 3 - Carro que mais gastou");
-                        // Implementar lógica para encontrar carro que mais gastou
+                        mostrarCarroMaisGastou();
                         break;
                     case 4:
                         clearScreen();
