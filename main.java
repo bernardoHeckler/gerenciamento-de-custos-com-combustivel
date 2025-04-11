@@ -127,7 +127,7 @@ public class main {
         }
 
         /////// opção 3: mostrar carro que mais gastou
-        
+
         public static void mostrarCarroMaisGastou() {
             clearScreen();
             System.out.println("Opção 3 - Mostrar carro que mais gastou:");
@@ -145,6 +145,26 @@ public class main {
                         carroMaisGastou.modeloCarro,
                         carroMaisGastou.dinheiroCliente,
                         carroMaisGastou.dinheiroCliente / litroDoPosto);
+            }
+        }
+
+        /////// opção 4: mostrar total gasto em combustível
+
+        public static void totalGastoCombustivel() {
+            clearScreen();
+            System.out.println("Opção 4 - Mostrar gasto total em combustível:\n");
+            if (carros.isEmpty()) {
+                System.out.println("\nNenhum carro foi cadastrado ainda!");
+            } else {
+                double litrosTotais = 0;
+                double dinheiroTotal = 0;
+                for (Carro carro : carros) {
+                    litrosTotais += carro.dinheiroCliente / carro.valorLitro;
+                    dinheiroTotal += carro.dinheiroCliente;
+                }
+                System.out.printf("Total de litros abastecidos: %.2f L%n", litrosTotais);
+                System.out.printf("Dinheiro total gasto: R$ %.2f%n", dinheiroTotal);
+
             }
         }
 
@@ -171,9 +191,7 @@ public class main {
                         mostrarCarroMaisGastou();
                         break;
                     case 4:
-                        clearScreen();
-                        System.out.println("Opção 4 - Total gasto em combustível");
-                        // Implementar cálculo do total gasto
+                        totalGastoCombustivel();
                         break;
                     case 0:
                         clearScreen();
